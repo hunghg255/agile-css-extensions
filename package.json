@@ -1,6 +1,7 @@
 {
   "name": "agile-css-autocomplete",
   "displayName": "agile-css-autocomplete",
+  "publisher": "AgileCssAutocomplete",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -9,7 +10,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "main": "./out/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run compile",
