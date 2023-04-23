@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { BREAK_POINT, CSS_PROPS, CSS_PSEUDO } from './constant';
 
+const regClass = /[className,class,\',\",\[]/;
+
 export function activate(context: vscode.ExtensionContext) {
   const provider = {
     provideCompletionItems(
@@ -9,6 +11,12 @@ export function activate(context: vscode.ExtensionContext) {
       token: vscode.CancellationToken,
       context: vscode.CompletionContext,
     ) {
+      const line = document.lineAt(position.line);
+
+      if (!regClass.test(line?.text)) {
+        return [];
+      }
+
       // const simpleCompletion1 = new vscode.CompletionItem({
       // 	label: 'background-color',
       // 	detail: " [bgc:]",
@@ -53,22 +61,16 @@ export function activate(context: vscode.ExtensionContext) {
     },
   };
 
-  const provider1 = vscode.languages.registerCompletionItemProvider(
-    { language: 'typescript' },
+  const subscription = vscode.languages.registerCompletionItemProvider(
+    [
+      { language: 'typescript', scheme: 'file' },
+      { language: 'typescriptreact', scheme: 'file' },
+      { language: 'javascript', scheme: 'file' },
+      { language: 'javascriptreact', scheme: 'file' },
+    ],
     provider,
-  );
-  const provider2 = vscode.languages.registerCompletionItemProvider(
-    { language: 'javascript' },
-    provider,
-  );
-  const provider3 = vscode.languages.registerCompletionItemProvider(
-    { language: 'typescriptreact' },
-    provider,
-  );
-  const provider5 = vscode.languages.registerCompletionItemProvider(
-    { language: 'javascriptreact' },
-    provider,
+    ' ',
   );
 
-  context.subscriptions.push(provider1, provider2, provider3, provider5);
+  context.subscriptions.push(subscription);
 }
